@@ -69,7 +69,7 @@ class AeroplanesAPI(BaseApi):
 if __name__ == "__main__":
     api = AeroplanesAPI()
 
-    data = api.get_aeroplanes("Rssia")
+    data = api.get_aeroplanes("Russia")
     print(f"Время запроса: {data['time']}\nнайдено {len(data["states"])}")
     for i, state in enumerate(data["states"]):
         print(f"{i} {state}")

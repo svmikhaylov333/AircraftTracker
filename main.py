@@ -1,13 +1,16 @@
+from src.aeroplanes_api import AeroplanesAPI
+from src.aeroplane import Aeroplane
+
 # Создание экземпляра класса для работы с API сайтов с самолетами
 api = AeroplanesAPI()
 
 # Получение информации о самолетах с opensky-network.org
-aeroplanes = api.get_aeroplanes(‘Spain’)
+aeroplanes = api.get_aeroplanes('Spain')
 
 # Преобразование набора данных в список объектов
-aeroplanes = Aeroplane.cast_to_object_list(aeroplanes)
+aeroplanes = Aeroplane.cast_to_bject_list(aeroplanes)
 
-# Пример работы контструктора класса с одним самолетом
+# Пример работы конструктора класса с одним самолетом
 aeroplane = Aeroplane("UAL1621", "United States", 268.79, 10203.18)
 
 # Сохранение информации в файл
