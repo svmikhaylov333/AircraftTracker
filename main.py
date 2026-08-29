@@ -1,5 +1,6 @@
 from src.aeroplanes_api import AeroplanesAPI
 from src.aeroplane import Aeroplane
+from src.json_editor import JSONEditor
 
 # Создание экземпляра класса для работы с API сайтов с самолетами
 api = AeroplanesAPI()
@@ -14,9 +15,9 @@ aeroplanes = Aeroplane.cast_to_bject_list(aeroplanes)
 aeroplane = Aeroplane("UAL1621", "United States", 268.79, 10203.18)
 
 # Сохранение информации в файл
-json_saver = JSONSaver()
-json_saver.add_aeroplane(vacancy)
-json_saver.delete_aeroplane(vacancy)
+json_saver = JSONEditor()
+json_saver.add_aeroplanes(vacancy)
+json_saver.delete_aeroplanes(vacancy)
 
 # Функция для взаимодействия с пользователем
 def user_interaction():
