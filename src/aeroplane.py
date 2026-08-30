@@ -1,7 +1,8 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 
+from main import aeroplanes
 # aeroplane = Aeroplane("UAL1621", "United States", 268.79, 10203.18)
-from src.aeroplanes_api import AeroplanesAPI
+
 
 
 class Aeroplane:
@@ -74,3 +75,24 @@ class Aeroplane:
             "velocity": self.velocity,
             "geo_altitude": self.geo_altitude,
         }
+
+    @classmethod
+    def cast_to_object_list(cls, data: Dict[str, Any]) -> List["Aeroplane"]:
+        """Преобразование данных из API в список объектов"""
+
+        aeroplanes_list: list[Aeroplane] = []
+
+        if not data or "states" not in data:
+            return aeroplanes
+
+        for state in data["states"]:
+            aeroplane = cls(
+                callsign=state[1].strip() if state[1] else "N/A",
+                country=state[2] if state[2] else "Unknown",
+                velocity=float(state[9]) if state[9] is not None else 0.0,
+                geo_altitude=float(state[13]) if state[13] is not None else 0.0,
+            )
+            aeroplanes_list.append(aeroplane)
+
+        return aeroplanes
+
