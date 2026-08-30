@@ -1,7 +1,5 @@
 from typing import Any, Dict, List
 
-# aeroplane = Aeroplane("UAL1621", "United States", 268.79, 10203.18)
-
 
 class Aeroplane:
     """Класс для работы с информацией о самолетах"""
@@ -83,13 +81,40 @@ class Aeroplane:
         if not data or "states" not in data:
             return aeroplanes_list
 
+        # for state in data["states"]:
+        #     aeroplane = cls(
+        #         callsign=state[1].strip() if state[1] else "N/A",
+        #         country=state[2] if state[2] else "Unknown",
+        #         velocity=float(state[9]) if state[9] is not None else 0.0,
+        #         geo_altitude=float(state[13]) if state[13] is not None else 0.0,
+        #     )
+        #     aeroplanes_list.append(aeroplane)
+        #
+        # return aeroplanes_list
+
         for state in data["states"]:
-            aeroplane = cls(
-                callsign=state[1].strip() if state[1] else "N/A",
-                country=state[2] if state[2] else "Unknown",
-                velocity=float(state[9]) if state[9] is not None else 0.0,
-                geo_altitude=float(state[13]) if state[13] is not None else 0.0,
-            )
-            aeroplanes_list.append(aeroplane)
+            if not state or len(state) < 14:
+                continue
+
+            callsign = state[1].strip() if state[1] else "N/A"
+            country = state[2] if state[2] else "Unknown"
+            velocity = float(state[9]) if state[9] is not None else 0.0
+            geo_altitude = float(state[13]) if state[13] is not None else 0.0
+
+            # Пропускаем отрицательную высоту
+            if geo_altitude < 0:
+                continue
+
+            try:
+                aeroplane = cls(
+                    callsign=callsign,
+                    country=country,
+                    velocity=velocity,
+                    geo_altitude=geo_altitude,
+                )
+                aeroplanes_list.append(aeroplane)
+            except ValueError:
+                # Пропускаем отрицательную высоту или скорость
+                continue
 
         return aeroplanes_list

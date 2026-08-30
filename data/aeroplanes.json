@@ -1,0 +1,74 @@
+[
+    {
+        "callsign": "THY1",
+        "country": "Turkey",
+        "velocity": 243.21,
+        "geo_altitude": 9852.66
+    },
+    {
+        "callsign": "SAS7002",
+        "country": "Sweden",
+        "velocity": 239.56,
+        "geo_altitude": 11109.96
+    },
+    {
+        "callsign": "FBU47G",
+        "country": "Spain",
+        "velocity": 252.02,
+        "geo_altitude": 10782.3
+    },
+    {
+        "callsign": "THY5KM",
+        "country": "Turkey",
+        "velocity": 241.25,
+        "geo_altitude": 9547.86
+    },
+    {
+        "callsign": "ICE35E",
+        "country": "Iceland",
+        "velocity": 232.63,
+        "geo_altitude": 9624.06
+    },
+    {
+        "callsign": "ICE75T",
+        "country": "Iceland",
+        "velocity": 204.75,
+        "geo_altitude": 9685.02
+    },
+    {
+        "callsign": "FNA78A",
+        "country": "Iceland",
+        "velocity": 6.94,
+        "geo_altitude": 0.0
+    },
+    {
+        "callsign": "ICE454",
+        "country": "Iceland",
+        "velocity": 192.34,
+        "geo_altitude": 5905.5
+    },
+    {
+        "callsign": "BAW97A",
+        "country": "United Kingdom",
+        "velocity": 246.43,
+        "geo_altitude": 9845.04
+    },
+    {
+        "callsign": "KLM219",
+        "country": "Kingdom of the Netherlands",
+        "velocity": 252.05,
+        "geo_altitude": 9525.0
+    },
+    {
+        "callsign": "UAL178",
+        "country": "United States",
+        "velocity": 255.26,
+        "geo_altitude": 10797.54
+    },
+    {
+        "callsign": "AFR82M",
+        "country": "France",
+        "velocity": 250.72,
+        "geo_altitude": 11430.0
+    }
+]
