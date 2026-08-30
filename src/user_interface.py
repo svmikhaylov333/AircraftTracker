@@ -21,7 +21,7 @@ from src.aeroplane import Aeroplane
 
 
 def filter_aeroplanes(aeroplanes: List[Aeroplane], filter_words:List) -> List[Aeroplane]:
-    """функция фильтрации самолетов по списку стран регистрации"""
+    """Функция фильтрации самолетов по списку стран регистрации"""
     filtered_aeroplanes = []
 
     if not filter_words:
@@ -33,5 +33,26 @@ def filter_aeroplanes(aeroplanes: List[Aeroplane], filter_words:List) -> List[Ae
                 filtered_aeroplanes.append(aeroplane)
                 break
     return filtered_aeroplanes
+
+def get_aeroplanes_by_altitude(aeroplanes: List[Aeroplane], altitude_range: str) -> List[Aeroplane]:
+    """ Функция фильтрации самолетов по высоте"""
+    try:
+        filtered_aeroplanes = []
+
+        range_morph = altitude_range.replace('-', ' ').split()
+        if len(range_morph) == 2:
+            min_altitude, max_altitude = float(range_morph[0]), float(range_morph[1])
+        elif len(range_morph) == 1:
+            min_altitude, max_altitude = float(range_morph[0]), float('inf')
+        else:
+            return aeroplanes
+
+        for aeroplane in aeroplanes:
+            if min_altitude <= aeroplane.geo_altitude <= max_altitude:
+                filtered_aeroplanes.append(aeroplane)
+        return filtered_aeroplanes
+    except ValueError:
+        print("Некорректный формат диапазона. Используйте: '10000 - 15000'")
+        return aeroplanes
 
 
