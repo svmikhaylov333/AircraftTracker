@@ -72,6 +72,7 @@ def test_delete_aeroplanes_two_criteria(editor, planes):
     assert len(data) == 1
     assert data[0]["callsign"] == "Q1"
 
+
 def test_save_data(editor, plane1):
     """Тест - сохранения данных"""
     data = [plane1.to_dict()]
@@ -80,4 +81,3 @@ def test_save_data(editor, plane1):
     loaded = editor.load_data()
     assert len(loaded) == 1
     assert loaded[0]["callsign"] == "Q1"
-

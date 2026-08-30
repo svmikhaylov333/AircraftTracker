@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 
 
 class BaseFileEditor(ABC):
-    """абстрактный класс для работы с файлами"""
+    """Абстрактный класс для работы с файлами"""
 
     @abstractmethod
     def add_aeroplanes(self, aeroplane_data: List[Dict[str, Any]]) -> None:
@@ -12,12 +12,12 @@ class BaseFileEditor(ABC):
 
     @abstractmethod
     def get_aeroplanes(self, *args, **kwargs) -> List[Dict[str, Any]]:
-        """ "Получение информации о самолетах из файла по заданному критерию"""
+        """Получение информации о самолетах из файла по заданному критерию"""
         pass
 
     @abstractmethod
     def delete_aeroplanes(self, *args, **kwargs) -> None:
-        """ "Удаление информации о самолетах по заданному критерию"""
+        """Удаление информации о самолетах по заданному критерию"""
         pass
 
     @abstractmethod

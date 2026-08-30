@@ -31,7 +31,7 @@ class AeroplanesAPI(BaseApi):
 
             response = get(
                 url=self.OPENSTREETMAP_URL,
-                params=params_nominatim, # type: ignore
+                params=params_nominatim,  # type: ignore
                 headers=headers_nominatim,
             )
             data_response: list = response.json()

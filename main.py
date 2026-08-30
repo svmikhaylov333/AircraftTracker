@@ -1,6 +1,7 @@
 from src.aeroplane import Aeroplane
 from src.aeroplanes_api import AeroplanesAPI
 from src.json_editor import JSONEditor
+from src.user_interface import filter_aeroplanes
 
 # Создание экземпляра класса для работы с API сайтов с самолетами
 api = AeroplanesAPI()
@@ -9,15 +10,16 @@ api = AeroplanesAPI()
 aeroplanes = api.get_aeroplanes("Spain")
 
 # Преобразование набора данных в список объектов
-aeroplanes = Aeroplane.cast_to_bject_list(aeroplanes)
+aeroplanes = Aeroplane.cast_to_object_list(aeroplanes)
 
 # Пример работы конструктора класса с одним самолетом
 aeroplane = Aeroplane("UAL1621", "United States", 268.79, 10203.18)
 
 # Сохранение информации в файл
 json_saver = JSONEditor()
-json_saver.add_aeroplanes(vacancy)
-json_saver.delete_aeroplanes(vacancy)
+json_saver.add_aeroplanes([aeroplane.to_dict()])
+# удаление добавленного самолета
+json_saver.delete_aeroplanes("UAL1621")
 
 
 # Функция для взаимодействия с пользователем
@@ -30,6 +32,8 @@ def user_interaction():
     altitude_range = input("Введите диапазон высот полета: ")  # Пример: 100000 - 150000
 
     filtered_aeroplanes = filter_aeroplanes(aeroplanes, filter_words)
+
+    print(filtered_aeroplanes)
 
     ranged_aeroplanes = get_aeroplanes_by_altitude(aeroplanes, altitude_range)
 

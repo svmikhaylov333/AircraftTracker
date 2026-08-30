@@ -1,8 +1,6 @@
 from typing import Any, Dict, List
 
-from main import aeroplanes
 # aeroplane = Aeroplane("UAL1621", "United States", 268.79, 10203.18)
-
 
 
 class Aeroplane:
@@ -83,7 +81,7 @@ class Aeroplane:
         aeroplanes_list: list[Aeroplane] = []
 
         if not data or "states" not in data:
-            return aeroplanes
+            return aeroplanes_list
 
         for state in data["states"]:
             aeroplane = cls(
@@ -94,5 +92,4 @@ class Aeroplane:
             )
             aeroplanes_list.append(aeroplane)
 
-        return aeroplanes
-
+        return aeroplanes_list

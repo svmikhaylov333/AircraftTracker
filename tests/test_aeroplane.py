@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 import pytest
 
 from src.aeroplane import Aeroplane
@@ -45,3 +47,23 @@ def test_aeroplane_velocity_value_error() -> None:
 def test_aeroplane_geo_altitude_value_error() -> None:
     with pytest.raises(ValueError, match="Высота не может быть отрицательной"):
         Aeroplane("Q1", "RUSSIA", 100, -10000.0)
+
+
+def test_cast_to_object_list(data: Dict[str, Any]) -> None:
+    """тест функции cast_to_object_list()"""
+    result = Aeroplane.cast_to_object_list(data)
+
+    # Проверяем количество
+    assert len(result) == 2
+
+    # Проверяем первый самолёт (SWR438A)
+    assert result[0].callsign == "SWR438A"
+    assert result[0].country == "Switzerland"
+    assert result[0].velocity == 189.7
+    assert result[0].geo_altitude == 4282.44
+
+    # Проверяем второй самолёт (Q1)
+    assert result[1].callsign == "Q1"
+    assert result[1].country == "Russia"
+    assert result[1].velocity == 189.7
+    assert result[1].geo_altitude == 5282.44

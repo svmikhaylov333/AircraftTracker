@@ -15,12 +15,14 @@
 #     print_aeroplanes(top_aeroplanes)
 
 
-
 from typing import List
+
 from src.aeroplane import Aeroplane
 
 
-def filter_aeroplanes(aeroplanes: List[Aeroplane], filter_words:List) -> List[Aeroplane]:
+def filter_aeroplanes(
+    aeroplanes: List[Aeroplane], filter_words: List
+) -> List[Aeroplane]:
     """Функция фильтрации самолетов по списку стран регистрации"""
     filtered_aeroplanes = []
 
@@ -34,16 +36,19 @@ def filter_aeroplanes(aeroplanes: List[Aeroplane], filter_words:List) -> List[Ae
                 break
     return filtered_aeroplanes
 
-def get_aeroplanes_by_altitude(aeroplanes: List[Aeroplane], altitude_range: str) -> List[Aeroplane]:
-    """ Функция фильтрации самолетов по высоте"""
+
+def get_aeroplanes_by_altitude(
+    aeroplanes: List[Aeroplane], altitude_range: str
+) -> List[Aeroplane]:
+    """Функция фильтрации самолетов по высоте"""
     try:
         filtered_aeroplanes = []
 
-        range_morph = altitude_range.replace('-', ' ').split()
+        range_morph = altitude_range.replace("-", " ").split()
         if len(range_morph) == 2:
             min_altitude, max_altitude = float(range_morph[0]), float(range_morph[1])
         elif len(range_morph) == 1:
-            min_altitude, max_altitude = float(range_morph[0]), float('inf')
+            min_altitude, max_altitude = float(range_morph[0]), float("inf")
         else:
             return aeroplanes
 
@@ -55,20 +60,23 @@ def get_aeroplanes_by_altitude(aeroplanes: List[Aeroplane], altitude_range: str)
         print("Некорректный формат диапазона. Используйте: '10000 - 15000'")
         return aeroplanes
 
-    #sorted_aeroplanes = sort_aeroplanes(ranged_aeroplanes)
+    # sorted_aeroplanes = sort_aeroplanes(ranged_aeroplanes)
+
 
 def sort_aeroplanes(aeroplanes: List[Aeroplane]) -> List[Aeroplane]:
-    """ Сортировка самолетов по высоте (по убыванию)"""
+    """Сортировка самолетов по высоте (по убыванию)"""
     return sorted(aeroplanes, key=lambda p: p.geo_altitude, reverse=True)
 
-
     #     top_aeroplanes = get_top_aeroplanes(sorted_aeroplanes, top_n)
+
+
 def get_top_aeroplanes(aeroplanes: List[Aeroplane], top_n: int) -> List[Aeroplane]:
     """Получение топ N самолетов"""
     if top_n <= 0:
         return []
     return aeroplanes[:top_n]
     #     print_aeroplanes(top_aeroplanes)
+
 
 def print_aeroplanes(aeroplanes: List[Aeroplane]) -> None:
     """Вывод самолетов в консоль"""
@@ -79,5 +87,7 @@ def print_aeroplanes(aeroplanes: List[Aeroplane]) -> None:
     print(f"\nНайдено: {len(aeroplanes)} самолетов")
     print("=" * 30)
     for i, aeroplane in enumerate(aeroplanes, 1):
-        print(f"{i}. {aeroplane.callsign}, {aeroplane.country}, скорость: {aeroplane.velocity} м/с, высота: {aeroplane.geo_altitude} м")
+        print(
+            f"{i}. {aeroplane.callsign}, {aeroplane.country}, скорость: {aeroplane.velocity} м/с, высота: {aeroplane.geo_altitude} м"
+        )
     print("=" * 30)
