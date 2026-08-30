@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 from requests import get
 
 from src.base_api import BaseApi
@@ -10,7 +12,7 @@ class AeroplanesAPI(BaseApi):
     OPENSKY_URL = "https://opensky-network.org/api/states/all?"
 
     def __init__(self) -> None:
-        self.aeroplanes = {}
+        self.aeroplanes: dict[str, Any] = {}
 
     def get_coordinates(self, country: str) -> list:
         """Метод для получения координат выбранной страны"""
@@ -29,11 +31,15 @@ class AeroplanesAPI(BaseApi):
 
             response = get(
                 url=self.OPENSTREETMAP_URL,
-                params=params_nominatim,
+                params=params_nominatim, # type: ignore
                 headers=headers_nominatim,
             )
-            data_response = response.json()
-            geo_coordinates = data_response[0].get("boundingbox")
+            data_response: list = response.json()
+            if not data_response:
+                return []
+            geo_coordinates: list[str] = data_response[0].get("boundingbox")
+            if not geo_coordinates:
+                return []
 
             return geo_coordinates
         except IndexError as exp:

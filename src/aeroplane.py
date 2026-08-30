@@ -1,22 +1,30 @@
+from typing import Any, Dict
 
 # aeroplane = Aeroplane("UAL1621", "United States", 268.79, 10203.18)
 from src.aeroplanes_api import AeroplanesAPI
 
+
 class Aeroplane:
     """Класс для работы с информацией о самолетах"""
 
-    def __init__(self, callsign:str, country:str, velocity: float, geo_altitude: float, ):
+    def __init__(
+        self,
+        callsign: str,
+        country: str,
+        velocity: float,
+        geo_altitude: float,
+    ):
 
-        self.callsign = callsign        # Callsign — позывной рейса
-        self.country = country          # Страна регистрации ВС
+        self.callsign = callsign  # Callsign — позывной рейса
+        self.country = country  # Страна регистрации ВС
 
         if velocity >= 0:
-            self.velocity = velocity    # velocity — горизонтальная скорость (м/с)
+            self.velocity = velocity  # velocity — горизонтальная скорость (м/с)
         else:
             print(f"velocity={velocity} < 0, выбрасываем ValueError")
             raise ValueError("Скорость не может быть отрицательной")
 
-        if geo_altitude >= 0:          # geo_altitude — геометрическая высота (м)
+        if geo_altitude >= 0:  # geo_altitude — геометрическая высота (м)
             self.geo_altitude = geo_altitude
         else:
             print(f"geo_altitude={geo_altitude} < 0, выбрасываем ValueError")
@@ -40,25 +48,29 @@ class Aeroplane:
             return self.velocity < other.velocity
         raise TypeError("Можно сравнивать только одинаковые типы")
 
-    def higher_than(self, other: 'Aeroplane') -> bool:
+    def higher_than(self, other: "Aeroplane") -> bool:
         """Метод сравнения высоты - больше"""
         if type(other) is type(self):
             return self.geo_altitude > other.geo_altitude
         raise TypeError("Можно сравнивать только одинаковые типы")
 
-
-    def lower_than(self, other: 'Aeroplane') -> bool:
+    def lower_than(self, other: "Aeroplane") -> bool:
         """Метод сравнения высоты - меньше"""
         if type(other) is type(self):
             return self.geo_altitude < other.geo_altitude
         raise TypeError("Можно сравнивать только одинаковые типы")
 
-    def same_altitude(self, other: 'Aeroplane') -> bool:
+    def same_altitude(self, other: "Aeroplane") -> bool:
         """Метод сравнения высоты - равно"""
         if type(other) is type(self):
             return self.geo_altitude == other.geo_altitude
         raise TypeError("Можно сравнивать только одинаковые типы")
 
-
-
-
+    def to_dict(self) -> Dict[str, Any]:
+        """Преобразование в словарь"""
+        return {
+            "callsign": self.callsign,
+            "country": self.country,
+            "velocity": self.velocity,
+            "geo_altitude": self.geo_altitude,
+        }

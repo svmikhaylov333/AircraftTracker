@@ -1,12 +1,12 @@
-from src.aeroplanes_api import AeroplanesAPI
 from src.aeroplane import Aeroplane
+from src.aeroplanes_api import AeroplanesAPI
 from src.json_editor import JSONEditor
 
 # Создание экземпляра класса для работы с API сайтов с самолетами
 api = AeroplanesAPI()
 
 # Получение информации о самолетах с opensky-network.org
-aeroplanes = api.get_aeroplanes('Spain')
+aeroplanes = api.get_aeroplanes("Spain")
 
 # Преобразование набора данных в список объектов
 aeroplanes = Aeroplane.cast_to_bject_list(aeroplanes)
@@ -19,12 +19,15 @@ json_saver = JSONEditor()
 json_saver.add_aeroplanes(vacancy)
 json_saver.delete_aeroplanes(vacancy)
 
+
 # Функция для взаимодействия с пользователем
 def user_interaction():
     country = input("Введите название страны: ")
     top_n = int(input("Введите количество самолетов для вывода в топ N: "))
-    filter_words = input("Введите названия стран для фильтрации по стране регистрации: ").split()
-    altitude_range = input("Введите диапазон высот полета: ") # Пример: 100000 - 150000
+    filter_words = input(
+        "Введите названия стран для фильтрации по стране регистрации: "
+    ).split()
+    altitude_range = input("Введите диапазон высот полета: ")  # Пример: 100000 - 150000
 
     filtered_aeroplanes = filter_aeroplanes(aeroplanes, filter_words)
 

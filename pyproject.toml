@@ -25,3 +25,10 @@ dev = [
     "pytest (>=9.1.1,<10.0.0)",
     "pytest-cov (>=7.1.0,<8.0.0)"
 ]
+
+# Настройки покрытия. Исключение базовых классов
+[tool.coverage.run]
+omit = [
+    "src/base_api.py",
+    "src/base_file_editor.py",
+]

@@ -1,19 +1,16 @@
 import json
 import os
-from src.base_file_editor import BaseFileEditor
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
+from src.base_file_editor import BaseFileEditor
 
 
 class JSONEditor(BaseFileEditor):
     """Класс для работы с JSON-файлом"""
 
-
     def __init__(self, file_path: str = "data/aeroplanes.json"):
         self.file_path = file_path
         self.make_dir()
-
-
 
     def make_dir(self):
         dir_path = os.path.dirname(self.file_path)
@@ -33,7 +30,6 @@ class JSONEditor(BaseFileEditor):
         """Сохранение данных в файл"""
         self._save_json(data)
 
-
     def _load_json(self) -> List[Dict[str, Any]]:
         if not os.path.exists(self.file_path):
             return []
@@ -43,9 +39,6 @@ class JSONEditor(BaseFileEditor):
                 return json.load(f)
         except FileNotFoundError:
             return []
-
-
-
 
     def add_aeroplanes(self, aeroplane_data: List[Dict[str, Any]]) -> None:
         """добавление информации о самолтах в файл"""
@@ -61,6 +54,8 @@ class JSONEditor(BaseFileEditor):
             else:
                 data.append(new_aeroplane)
 
+        self._save_json(data)
+
     def get_aeroplanes(self, *args, **kwargs) -> List[Dict[str, Any]]:
         """Получение информации по критерию"""
 
@@ -74,37 +69,35 @@ class JSONEditor(BaseFileEditor):
                     result.append(aeroplane)
             data = result
 
-
         if args:
             callsigns = args
             result = []
             for aeroplane in data:
-                if aeroplane.get('callsign') in callsigns:
+                if aeroplane.get("callsign") in callsigns:
                     result.append(aeroplane)
             data = result
 
         return data
 
     def delete_aeroplanes(self, *args, **kwargs) -> None:
-            """Удаление информации о самолетах по заданному критерию"""
-            data = self._load_json()
+        """Удаление информации о самолетах по заданному критерию"""
+        data = self._load_json()
 
+        if args:
+            callsigns = args
+            data = [
+                aeroplane
+                for aeroplane in data
+                if aeroplane.get("callsign") not in callsigns
+            ]
+        if kwargs:
+            result = []
+            for aeroplane in data:
+                for key, value in kwargs.items():
+                    if aeroplane.get(key) == value:
+                        break
+                else:
+                    result.append(aeroplane)
+            data = result
 
-            if args:
-                callsigns = args
-                data = [aeroplane for aeroplane in data if aeroplane.get('callsign') not in callsigns]
-            if kwargs:
-                result = []
-                for aeroplane in data:
-                    for key, value in kwargs.items():
-                        if aeroplane.get(key) == value:
-                            break
-                    else:
-                        result.append(aeroplane)
-                data = result
-
-            self._save_json(data)
-
-
-
-
+        self._save_json(data)
