@@ -1,7 +1,8 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 import psycopg2
 
+from aeroplane import Aeroplane
 from src.base_dbmanager import BaseDBManager
 from src.config import config
 
@@ -141,3 +142,46 @@ class DBManager(BaseDBManager):
                 (f"%{symbols}%",),
             )
             return cur.fetchall()
+
+    # методы заполнения БД
+
+    def insert_country(self, country_name: str) -> int:
+        """Добавление страны"""
+        with self.conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO countries (name)
+                VALUES (%s)
+                ON CONFLICT (name) DO NOTHING
+                RETURNING id;
+                """,
+                (country_name,),
+            )
+            result = cur.fetchone()
+            if result:
+                return result[0]
+            cur.execute(
+                "SELECT id FROM countries WHERE name = %s;",
+                (country_name,),
+            )
+            return cur.fetchone()[0]
+
+    def insert_aeroplanes(self, aeroplanes: List[Aeroplane], country_name: str ) -> None:
+        """Добавление самолётов в БД"""
+        if not aeroplanes:
+            print("Нет самолётов для вставки")
+            return
+
+        country_id = self.insert_country(country_name)
+        with self.conn.cursor() as cur:
+            for aeroplane in aeroplanes:
+                cur.execute(
+                    """
+                    INSERT INTO aeroplanes (callsign, country_id, velocity, geo_altitude)
+                    VALUES (%s, %s, %s, %s)
+                    ON CONFLICT (callsign) DO UPDATE
+                    SET velocity = EXCLUDED.velocity,
+                        geo_altitude = EXCLUDED.geo_altitude,
+                        country_id = EXCLUDED.country_id;
+                    """,(aeroplane.callsign, country_id, aeroplane.velocity, aeroplane.geo_altitude,),
+                )
