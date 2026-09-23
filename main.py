@@ -24,11 +24,8 @@ from src.user_interface import (filter_aeroplanes, get_aeroplanes_by_altitude,
 # json_saver.delete_aeroplanes("UAL1621")
 
 
-# Функция для взаимодействия с пользователем
-def user_interaction():
-    print("=" * 60)
-    print("Запущена программа 'Авиационный трекер AircraftTracker'")
-    print("=" * 60)
+# Функция для взаимодействия с пользователем (JSON)
+def json_mode():
 
     country = input("Введите название страны (на Английском): ")
     print(f"получение данных над {country}...")
@@ -58,6 +55,29 @@ def user_interaction():
     top_aeroplanes = get_top_aeroplanes(sorted_aeroplanes, top_n)
     print_aeroplanes(top_aeroplanes)
 
+
+# Функция для взаимодействия с пользователем (PostgreSQL)
+def db_mode():
+    pass
+
+def user_interaction():
+    print("=" * 60)
+    print("Запущена программа 'Авиационный трекер AircraftTracker'")
+    print("=" * 60)
+    print("Выберите режим работы:")
+    print("1. JSON")
+    print("2. База данных (PostgreSQL)")
+    print("3. Выход")
+    print("=" * 60)
+    choice = input ("Ваш выбор: ")
+    if choice == "1":
+        json_mode()
+    elif choice == "2":
+        db_mode()
+    elif choice == "3":
+        print("Bye!!!")
+    else:
+        print("Некорректный ввод. пока!")
 
 if __name__ == "__main__":
     user_interaction()
