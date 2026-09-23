@@ -11,20 +11,10 @@ class DBManager(BaseDBManager):
         """Подключение к БД PostgreSQL с данными из ini-файла"""
         # Загрузка данных из ini файла
         self.params = config(config_path)
-        self.conn = None
-        self.cur = None
 
-        # self.params = config(config_path)
-        #
-        # ## Подключение к базе данных
-        # # ** распаковывает словарь в именованные арг-ты dbname="aircraft_tracker" и т.д.
-        # self.conn = psycopg2.connect(**self.params)
-        # # чтобы не писать conn.commit()/ после команды сразу добавление в БД
-        # self.conn.autocommit = True
-        # # Открытие курсора
-        # self.cur = self.conn.cursor()
-        #
-        # self.create_database()
+        self.conn = psycopg2.connect(**self.params)
+        self.conn.autocommit = True
+        self.cur = self.conn.cursor()
 
 
     def __del__(self) -> None:
@@ -48,9 +38,14 @@ class DBManager(BaseDBManager):
         conn = psycopg2.connect(**params)
         conn.autocommit = True
 
-        # ????узнать как отключить всех пользователей от целевой БД
-
-        # Удаляем и создаем БД из ini
+        # Отключить всех пользователей
+        cur = conn.cursor()
+        cur.execute(f"""
+                        SELECT pg_terminate_backend(pid)
+                        FROM pg_stat_activity
+                        WHERE datname = '{database_name}' AND pid <> pg_backend_pid()
+                    """)
+        # Удаляем и создаем БД из ini (Может лучше не удалять??? Подумать)
         cur = conn.cursor()
         try:
             cur.execute(f"DROP DATABASE IF EXISTS {self.params['dbname']}")
@@ -77,36 +72,72 @@ class DBManager(BaseDBManager):
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS aeroplanes (
                     id SERIAL PRIMARY KEY,
-                    icao24 VARCHAR(10) UNIQUE NOT NULL,
-                    callsign VARCHAR(20),
-                    origin_country VARCHAR(100),
-                    latitude FLOAT,
-                    longitude FLOAT,
-                    altitude FLOAT,
-                    velocity FLOAT
+                    callsign VARCHAR(50) NOT NULL,
+                    country_id INTEGER REFERENCES countries(id) ON DELETE CASCADE,
+                    velocity FLOAT NOT NULL,
+                    geo_altitude FLOAT NOT NULL,
+                    UNIQUE(callsign)
                 )
             """)
         print("Таблицы созданы")
 
     def get_countries_and_aeroplanes_count(self) -> List:
         """получает список всех стран и количество самолетов в их воздушных пространствах"""
-        pass
+        with self.conn.cursor() as cur:
+            cur.execute("""
+                SELECT c.name, COUNT(a.id) AS aeroplanes_count
+                FROM countries c
+                JOIN aeroplanes a ON a.country_id = c.id
+                GROUP BY c.name
+                ORDER BY aeroplanes_count DESC;
+            """)
+            return cur.fetchall()
+
 
 
     def get_all_aeroplanes(self) -> List:
         """получает список всех воздушных судов"""
-        pass
+        with self.conn.cursor() as cur:
+            cur.execute("""
+                       SELECT a.callsign, c.name, a.velocity, a.geo_altitude
+                       FROM aeroplanes a
+                       JOIN countries c ON a.country_id = c.id
+                       ORDER BY a.callsign;
+                   """)
+            return cur.fetchall()
 
 
     def get_avg_speed(self) -> Optional[float]:
         """получает среднюю скорость по самолетам"""
-        pass
+        with self.conn.cursor() as cur:
+            cur.execute("SELECT AVG(velocity) FROM aeroplanes;")
+            result = cur.fetchone()
+            return result[0] if result else None
 
     def get_aeroplanes_with_higher_speed(self) -> List:
         """получает список всех самолетов, у которых скорость выше средней"""
-        pass
+        with self.conn.cursor() as cur:
+            cur.execute("""
+                SELECT a.callsign, c.name, a.velocity, a.geo_altitude
+                FROM aeroplanes a
+                JOIN countries c ON a.country_id = c.id
+                WHERE a.velocity > (SELECT AVG(velocity) FROM aeroplanes)
+                ORDER BY a.velocity DESC;
+            """)
+            return cur.fetchall()
 
 
     def get_aeroplanes_with_keyword(self, symbols:str) -> List:
         """получает список всех самолетов, в позывном которых содержатся переданные в метод символы."""
-        pass
+        with self.conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT a.callsign, c.name, a.velocity, a.geo_altitude
+                FROM aeroplanes a
+                JOIN countries c ON a.country_id = c.id
+                WHERE a.callsign ILIKE %s
+                ORDER BY a.callsign;
+                """,
+                (f"%{symbols}%",),
+            )
+            return cur.fetchall()

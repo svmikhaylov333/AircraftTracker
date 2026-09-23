@@ -84,4 +84,5 @@ def user_interaction():
 if __name__ == "__main__":
     db = DBManager()
     db.create_database()
+    db.get_countries_and_aeroplanes_count()
     user_interaction()
