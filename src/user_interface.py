@@ -1,20 +1,3 @@
-# def user_interaction():
-#     country = input("Введите название страны: ")
-#     top_n = int(input("Введите количество самолетов для вывода в топ N: "))
-#     filter_words = input(
-#         "Введите названия стран для фильтрации по стране регистрации: "
-#     ).split()
-#     altitude_range = input("Введите диапазон высот полета: ")  # Пример: 100000 - 150000
-#
-#     filtered_aeroplanes = filter_aeroplanes(aeroplanes, filter_words)
-#
-#     ranged_aeroplanes = get_aeroplanes_by_altitude(aeroplanes, altitude_range)
-#
-#     sorted_aeroplanes = sort_aeroplanes(ranged_aeroplanes)
-#     top_aeroplanes = get_top_aeroplanes(sorted_aeroplanes, top_n)
-#     print_aeroplanes(top_aeroplanes)
-
-
 from typing import List
 
 from src.aeroplane import Aeroplane
@@ -31,7 +14,7 @@ def filter_aeroplanes(
 
     for aeroplane in aeroplanes:
         for word in filter_words:
-            if word.lower() == aeroplane.country.lower():
+            if word.lower().strip() in aeroplane.country.lower().strip():
                 filtered_aeroplanes.append(aeroplane)
                 break
     return filtered_aeroplanes
@@ -60,14 +43,12 @@ def get_aeroplanes_by_altitude(
         print("Некорректный формат диапазона. Используйте: '10000 - 15000'")
         return aeroplanes
 
-    # sorted_aeroplanes = sort_aeroplanes(ranged_aeroplanes)
+
 
 
 def sort_aeroplanes(aeroplanes: List[Aeroplane]) -> List[Aeroplane]:
     """Сортировка самолетов по высоте (по убыванию)"""
     return sorted(aeroplanes, key=lambda p: p.geo_altitude, reverse=True)
-
-    #     top_aeroplanes = get_top_aeroplanes(sorted_aeroplanes, top_n)
 
 
 def get_top_aeroplanes(aeroplanes: List[Aeroplane], top_n: int) -> List[Aeroplane]:
@@ -75,7 +56,6 @@ def get_top_aeroplanes(aeroplanes: List[Aeroplane], top_n: int) -> List[Aeroplan
     if top_n <= 0:
         return []
     return aeroplanes[:top_n]
-    #     print_aeroplanes(top_aeroplanes)
 
 
 def print_aeroplanes(aeroplanes: List[Aeroplane]) -> None:
@@ -88,6 +68,7 @@ def print_aeroplanes(aeroplanes: List[Aeroplane]) -> None:
     print("=" * 30)
     for i, aeroplane in enumerate(aeroplanes, 1):
         print(
-            f"{i}. {aeroplane.callsign}, {aeroplane.country}, скорость: {aeroplane.velocity} м/с, высота: {aeroplane.geo_altitude} м"
+            f"{i}. {aeroplane.callsign}, {aeroplane.country}, "
+            f"скорость: {aeroplane.velocity} м/с, высота: {aeroplane.geo_altitude} м"
         )
     print("=" * 30)
