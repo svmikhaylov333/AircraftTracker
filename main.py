@@ -4,6 +4,8 @@ from src.json_editor import JSONEditor
 from src.user_interface import (filter_aeroplanes, get_aeroplanes_by_altitude,
                                 get_top_aeroplanes, print_aeroplanes,
                                 sort_aeroplanes)
+from src.dbmanager import DBManager
+
 
 # # Создание экземпляра класса для работы с API сайтов с самолетами
 # api = AeroplanesAPI()
@@ -80,4 +82,6 @@ def user_interaction():
         print("Некорректный ввод. пока!")
 
 if __name__ == "__main__":
+    db = DBManager()
+    db.create_database()
     user_interaction()
