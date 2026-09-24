@@ -1,11 +1,10 @@
 from src.aeroplane import Aeroplane
 from src.aeroplanes_api import AeroplanesAPI
+from src.dbmanager import DBManager
 from src.json_editor import JSONEditor
 from src.user_interface import (filter_aeroplanes, get_aeroplanes_by_altitude,
                                 get_top_aeroplanes, print_aeroplanes,
                                 sort_aeroplanes)
-from src.dbmanager import DBManager
-
 
 # # Создание экземпляра класса для работы с API сайтов с самолетами
 # api = AeroplanesAPI()
@@ -69,25 +68,51 @@ def db_mode():
     print("Загрузка самолётов из API в БД")
     print("=" * 60)
     print("Использовать страны по умолчанию?")
-    print('По умолчанию: ["Turkey", "Sweden", "Spain", "Iceland", "Russia", \n"United Kingdom", "United States", "France", "Switzerland", "Kingdom of the Netherlands"]')
+    print(
+        "\n"
+        '        По умолчанию: ["Turkey", "Sweden", "Spain", "Iceland", "Russia", \n'
+        '        "United Kingdom", "United States", "France", "Switzerland", "Kingdom of the Netherlands"]'
+    )
     print("1. Да")
     print("2. Нет")
     print("=" * 60)
 
     choice = input("Ваш выбор: ").strip()
-    countries=[]
+    countries = []
 
     if choice == "1":
-        countries = ["Turkey", "Sweden", "Spain", "Iceland", "Russia", "United Kingdom", "United States", "France", "Switzerland", "Kingdom of the Netherlands"]
+        countries = [
+            "Turkey",
+            "Sweden",
+            "Spain",
+            "Iceland",
+            "Russia",
+            "United Kingdom",
+            "United States",
+            "France",
+            "Switzerland",
+            "Kingdom of the Netherlands",
+        ]
     elif choice == "2":
-        countries_input = input(
-            "Введите 10 стран через запятую на английском: "
-        )
+        countries_input = input("Введите 10 стран через запятую на английском: ")
         countries = [c.strip() for c in countries_input.split(",")]
 
-        if len(countries) !=10:
-            print(f"Нужно ровно 10 стран, введено {len(countries)}. Используем по умолчанию.")
-            countries = ["Turkey", "Sweden", "Spain", "Iceland", "Russia", "United Kingdom", "United States", "France", "Switzerland", "Kingdom of the Netherlands"]
+        if len(countries) != 10:
+            print(
+                f"Нужно ровно 10 стран, введено {len(countries)}. Используем по умолчанию."
+            )
+            countries = [
+                "Turkey",
+                "Sweden",
+                "Spain",
+                "Iceland",
+                "Russia",
+                "United Kingdom",
+                "United States",
+                "France",
+                "Switzerland",
+                "Kingdom of the Netherlands",
+            ]
 
     # Загрузка данных
     api = AeroplanesAPI()
@@ -161,7 +186,6 @@ def db_mode():
             print("Некорректный ввод")
 
 
-
 def user_interaction():
     print("=" * 60)
     print("Запущена программа 'Авиационный трекер AircraftTracker'")
@@ -171,7 +195,7 @@ def user_interaction():
     print("2. База данных (PostgreSQL)")
     print("3. Выход")
     print("=" * 60)
-    choice = input ("Ваш выбор: ")
+    choice = input("Ваш выбор: ")
     if choice == "1":
         json_mode()
     elif choice == "2":
@@ -180,6 +204,7 @@ def user_interaction():
         print("Bye!!!")
     else:
         print("Некорректный ввод. пока!")
+
 
 if __name__ == "__main__":
 

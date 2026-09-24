@@ -6,9 +6,11 @@ from src.aeroplane import Aeroplane
 from src.base_dbmanager import BaseDBManager
 from src.config import config
 
+
 class DBManager(BaseDBManager):
     """Класс для работы с БД PostgreSQL"""
-    def __init__(self, config_path: str = 'database.ini') -> None:
+
+    def __init__(self, config_path: str = "database.ini") -> None:
         """Подключение к БД PostgreSQL с данными из ini-файла"""
         # Загрузка данных из ini файла
         self.params = config(config_path)
@@ -16,7 +18,6 @@ class DBManager(BaseDBManager):
         self.conn = psycopg2.connect(**self.params)
         self.conn.autocommit = True
         self.cur = self.conn.cursor()
-
 
     def __del__(self) -> None:
         for attr in ("cur", "conn"):
@@ -29,10 +30,9 @@ class DBManager(BaseDBManager):
                     print(f"Ошибка при закрытии {attr}: {exp}")
 
     def create_database(self) -> None:
-        """Создание базы данных и таблиц """
+        """Создание базы данных и таблиц"""
 
         database_name = self.params["dbname"]
-
 
         # Организуем подключение к системной БД
         params = {**self.params, "dbname": "postgres"}
@@ -57,7 +57,7 @@ class DBManager(BaseDBManager):
         finally:
             cur.close()
             conn.close()
-        #Переподключаемся к новосозданной базе
+        # Переподключаемся к новосозданной базе
         self.conn = psycopg2.connect(**self.params)
         self.conn.autocommit = True
         self.cur = self.conn.cursor()
@@ -94,8 +94,6 @@ class DBManager(BaseDBManager):
             """)
             return cur.fetchall()
 
-
-
     def get_all_aeroplanes(self) -> List:
         """получает список всех воздушных судов"""
         with self.conn.cursor() as cur:
@@ -106,7 +104,6 @@ class DBManager(BaseDBManager):
                        ORDER BY a.callsign;
                    """)
             return cur.fetchall()
-
 
     def get_avg_speed(self) -> Optional[float]:
         """получает среднюю скорость по самолетам"""
@@ -127,8 +124,7 @@ class DBManager(BaseDBManager):
             """)
             return cur.fetchall()
 
-
-    def get_aeroplanes_with_keyword(self, symbols:str) -> List:
+    def get_aeroplanes_with_keyword(self, symbols: str) -> List:
         """получает список всех самолетов, в позывном которых содержатся переданные в метод символы."""
         with self.conn.cursor() as cur:
             cur.execute(
@@ -166,7 +162,7 @@ class DBManager(BaseDBManager):
             )
             return cur.fetchone()[0]
 
-    def insert_aeroplanes(self, aeroplanes: List[Aeroplane], country_name: str ) -> None:
+    def insert_aeroplanes(self, aeroplanes: List[Aeroplane], country_name: str) -> None:
         """Добавление самолётов в БД"""
         if not aeroplanes:
             print("Нет самолётов для вставки")
@@ -183,5 +179,11 @@ class DBManager(BaseDBManager):
                     SET velocity = EXCLUDED.velocity,
                         geo_altitude = EXCLUDED.geo_altitude,
                         country_id = EXCLUDED.country_id;
-                    """,(aeroplane.callsign, country_id, aeroplane.velocity, aeroplane.geo_altitude,),
+                    """,
+                    (
+                        aeroplane.callsign,
+                        country_id,
+                        aeroplane.velocity,
+                        aeroplane.geo_altitude,
+                    ),
                 )

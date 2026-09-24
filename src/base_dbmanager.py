@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Optional
 
 
-class BaseDBManager (ABC):
+class BaseDBManager(ABC):
     """Абстрактный класс для работы с БД"""
 
     @abstractmethod
@@ -29,5 +29,3 @@ class BaseDBManager (ABC):
     def get_aeroplanes_with_keyword(self, symbols: str) -> List:
         """получает список всех самолетов, в позывном которых содержатся переданные в метод символы."""
         pass
-
-

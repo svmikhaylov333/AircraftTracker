@@ -2,7 +2,7 @@ from configparser import ConfigParser
 from typing import Dict
 
 
-def config(filename="database.ini", section="postgresql") -> Dict :
+def config(filename="database.ini", section="postgresql") -> Dict:
     # создание парсера
     parser = ConfigParser()
     # чтение конфигурационного файла
@@ -13,6 +13,5 @@ def config(filename="database.ini", section="postgresql") -> Dict :
         for param in params:
             db[param[0]] = param[1]
     else:
-        raise Exception(
-             f'Секция [{section}] не найдена в файле {filename}')
+        raise Exception(f"Секция [{section}] не найдена в файле {filename}")
     return db
