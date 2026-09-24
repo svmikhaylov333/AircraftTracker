@@ -44,8 +44,6 @@ def get_aeroplanes_by_altitude(
         return aeroplanes
 
 
-
-
 def sort_aeroplanes(aeroplanes: List[Aeroplane]) -> List[Aeroplane]:
     """Сортировка самолетов по высоте (по убыванию)"""
     return sorted(aeroplanes, key=lambda p: p.geo_altitude, reverse=True)
