@@ -60,7 +60,107 @@ def json_mode():
 
 # Функция для взаимодействия с пользователем (PostgreSQL)
 def db_mode():
-    pass
+    """Режим работы с PostgreSQL."""
+    print("\n" + "=" * 60)
+    print("Режим работы с База данных (PostgreSQL)")
+    database = DBManager()
+    database.create_database()  # пересоздаст БД!!!
+    print("\n" + "=" * 60)
+    print("Загрузка самолётов из API в БД")
+    print("=" * 60)
+    print("Использовать страны по умолчанию?")
+    print('По умолчанию: ["Turkey", "Sweden", "Spain", "Iceland", "Russia", \n"United Kingdom", "United States", "France", "Switzerland", "Kingdom of the Netherlands"]')
+    print("1. Да")
+    print("2. Нет")
+    print("=" * 60)
+
+    choice = input("Ваш выбор: ").strip()
+    countries=[]
+
+    if choice == "1":
+        countries = ["Turkey", "Sweden", "Spain", "Iceland", "Russia", "United Kingdom", "United States", "France", "Switzerland", "Kingdom of the Netherlands"]
+    elif choice == "2":
+        countries_input = input(
+            "Введите 10 стран через запятую на английском: "
+        )
+        countries = [c.strip() for c in countries_input.split(",")]
+
+        if len(countries) !=10:
+            print(f"Нужно ровно 10 стран, введено {len(countries)}. Используем по умолчанию.")
+            countries = ["Turkey", "Sweden", "Spain", "Iceland", "Russia", "United Kingdom", "United States", "France", "Switzerland", "Kingdom of the Netherlands"]
+
+    # Загрузка данных
+    api = AeroplanesAPI()
+    total_loaded = 0
+
+    for country in countries:
+        print(f"\nЗагрузка: {country}...")
+        try:
+            data = api.get_aeroplanes(country)
+            aeroplanes = Aeroplane.cast_to_object_list(data)
+
+            if aeroplanes:
+                database.insert_aeroplanes(aeroplanes, country)
+                total_loaded += len(aeroplanes)
+                print(f"{country}: {len(aeroplanes)} самолётов")
+            else:
+                print(f"{country}: самолёты не найдены")
+        except Exception as exp:
+            print(f"{country}: ошибка — {exp}")
+
+    print("\n" + "=" * 60)
+    print(f"Всего загружено: {total_loaded} самолётов")
+    print("=" * 60)
+
+    # Меню работы с БД
+    while True:
+        print("\n" + "=" * 60)
+        print("Режим работы с БД (PostgreSQL)")
+        print("=" * 60)
+        print("0. Выход")
+        print("1. Показать все самолёты")
+        print("2. Показать страны и количество самолётов")
+        print("3. Показать среднюю скорость")
+        print("4. Показать самолёты быстрее средней")
+        print("5. Поиск по позывному")
+        print("=" * 60)
+
+        choice = input("Ваш выбор: ")
+
+        if choice == "1":
+            rows = database.get_all_aeroplanes()
+            print(f"\nВсего самолётов: {len(rows)}")
+            for row in rows:
+                print(row)
+        elif choice == "2":
+            rows = database.get_countries_and_aeroplanes_count()
+            print(f"\nСтран: {len(rows)}")
+            for row in rows:
+                print(f"{row[0]}: {row[1]} самолётов")
+        elif choice == "3":
+            avg = database.get_avg_speed()
+            print(f"\nСредняя скорость: {avg} м/с")
+        elif choice == "4":
+            rows = database.get_aeroplanes_with_higher_speed()
+            print(f"\nСамолётов быстрее средней: {len(rows)}")
+            for row in rows:
+                print(row)
+        elif choice == "5":
+            keyword = input("Введите часть позывного: ").strip()
+            if keyword:
+                rows = database.get_aeroplanes_with_keyword(keyword)
+                print(f"\nНайдено: {len(rows)}")
+                for row in rows:
+                    print(row)
+            else:
+                print("Пустой ввод")
+        elif choice == "0":
+            print("Bye!!!")
+            break
+        else:
+            print("Некорректный ввод")
+
+
 
 def user_interaction():
     print("=" * 60)
@@ -82,7 +182,5 @@ def user_interaction():
         print("Некорректный ввод. пока!")
 
 if __name__ == "__main__":
-    db = DBManager()
-    db.create_database()
-    db.get_countries_and_aeroplanes_count()
+
     user_interaction()

@@ -1,8 +1,8 @@
-from typing import List, Optional, Dict, Any
+from typing import List, Optional
 
 import psycopg2
 
-from aeroplane import Aeroplane
+from src.aeroplane import Aeroplane
 from src.base_dbmanager import BaseDBManager
 from src.config import config
 
